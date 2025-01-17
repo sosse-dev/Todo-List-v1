@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo List by Ahmad Sosse</title>
+    <link rel="stylesheet" href="/global.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="second-container">
+        <div id="modal-container" class="modal-container">
+          <div id="modal-box" class="modal">
+            <span id="close-btn" class="close">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-x"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </span>
+            <label>To-Do List</label>
+            <textarea name="todo" class="todo-input" id="todo-input"></textarea>
+
+            <div class="form-2">
+              <div class="form-2-container">
+                <label>Level Prioritas</label>
+                <div class="priority-container">
+                  <select
+                    name="priority"
+                    id="todo-priority"
+                    class="priority-box"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-2-container">
+                <label>Tanggal</label>
+                <input type="date" id="todo-date" class="date" />
+              </div>
+            </div>
+
+            <div class="container-submit">
+              <button class="submit" onclick="addTodo()">Buat</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="modal-container-delete" class="modal-container">
+          <div id="modal-box" class="modal">
+            <span id="close-btn-delete" class="close">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-x"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </span>
+
+            <p class="delete-desc">Apakah anda yakin menghapus semua data?</p>
+
+            <div class="container-submit">
+              <button class="delete-all" onclick="deleteAll()">
+                Hapus Semua
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <header class="header">
+          <nav class="nav">
+            <h1>TODO LIST</h1>
+          </nav>
+
+          <div class="create-container">
+            <button id="open-btn" class="create-todo">+ Tambah</button>
+            <button id="open-btn-delete" class="delete-all">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-trash"
+              >
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <main id="list-container" class="list-container"></main>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
