@@ -1,1 +1,1 @@
-Creted with HTML, CSS and Vanilla Javascript
+Created with HTML, CSS and Vanilla Javascript
