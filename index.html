@@ -65,6 +65,28 @@
           </div>
         </div>
 
+        <div id="reg-container" class="modal-container-profile">
+          <div id="modal-box" class="modal">
+            <label>Nama</label>
+            <input type="text" id="name-input" class="name-input" />
+
+            <label>Peran</label>
+            <div class="priority-container">
+              <select name="priority" id="role-input" class="priority-box">
+                <option value="pekerja">Pekerja</option>
+                <option value="pelajar">Pelajar</option>
+                <option value="tidak ingin memberitahu">
+                  Tidak Ingin Memberitahu
+                </option>
+              </select>
+            </div>
+
+            <div class="container-submit">
+              <button id="save-profile-btn" class="submit">Buat Profil</button>
+            </div>
+          </div>
+        </div>
+
         <div id="modal-container-delete" class="modal-container">
           <div id="modal-box" class="modal">
             <span id="close-btn-delete" class="close">
@@ -95,13 +117,71 @@
           </div>
         </div>
 
+        <div id="modal-container-profile" class="modal-container-profile">
+          <div id="modal-box" class="modal-profile">
+            <span id="close-btn-profile" class="close">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-x"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </span>
+
+            <div class="profile-card">
+              <div>
+                <h2>Nama</h2>
+                <p id="user-name" class="username"></p>
+              </div>
+
+              <div>
+                <h2>Peran</h2>
+                <p id="user-role"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <header class="header">
           <nav class="nav">
             <h1>TODO LIST</h1>
+
+            <span id="open-btn-profile" class="profile-picture">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-user"
+              >
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
           </nav>
 
           <div class="create-container">
             <button id="open-btn" class="create-todo">+ Tambah</button>
+
+            <div class="tabs">
+              <input type="checkbox" id="checkbox-filter" class="checkbox" />
+              <p class="done">Filter</p>
+            </div>
+
             <button id="open-btn-delete" class="delete-all">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

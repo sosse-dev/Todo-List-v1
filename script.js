@@ -42,9 +42,34 @@ window.addEventListener("click", (event) => {
   }
 });
 
+const modalContainerProfile = document.getElementById(
+  "modal-container-profile"
+);
+const openModalBtnProfile = document.getElementById("open-btn-profile");
+const closeBtnProfile = document.getElementById("close-btn-profile");
+
+function openModalProfile() {
+  modalContainerProfile.style.display = "block";
+}
+
+function closeModalProfile() {
+  modalContainerProfile.style.display = "none";
+}
+
+openModalBtnProfile.addEventListener("click", openModalProfile);
+
+closeBtnProfile.addEventListener("click", closeModalProfile);
+
+window.addEventListener("click", (event) => {
+  if (event.target === modalContainerProfile) {
+    closeModalProfile();
+  }
+});
+
 class TodoManager {
   constructor() {
     this.todos = this.loadTodos();
+    this.showOnlyCompleted = false;
     this.renderTodos();
   }
 
@@ -116,7 +141,7 @@ class TodoManager {
     }
   }
 
-  createTodoElement(todo) {
+  createTodoElement(todo, status) {
     const sectionItem = document.createElement("section");
     sectionItem.classList.add("todo-list");
 
@@ -181,21 +206,29 @@ class TodoManager {
       containerTodoItem.appendChild(line);
 
       const todosForDate = groupedTodos[date];
-      const activeTodos = todosForDate.filter((todo) => !todo.completed);
-      const completedTodos = todosForDate.filter((todo) => todo.completed);
 
-      activeTodos.forEach((todo) => {
-        const todoItem = this.createTodoElement(todo); // priority ganti, tes console log
-        containerTodoItem.appendChild(todoItem);
+      const filteredTodos = todosForDate.filter((todo) => {
+        if (this.showOnlyCompleted) {
+          return todo.completed;
+        }
+
+        return true; // show all todos
       });
 
-      completedTodos.forEach((todo) => {
+      filteredTodos.forEach((todo) => {
         const todoItem = this.createTodoElement(todo);
         containerTodoItem.appendChild(todoItem);
       });
 
-      container.appendChild(containerTodoItem);
+      if (filteredTodos.length > 0) {
+        container.appendChild(containerTodoItem);
+      }
     });
+  }
+
+  filterCompleted() {
+    this.showOnlyCompleted = !this.showOnlyCompleted;
+    this.renderTodos();
   }
 
   formatDate(date) {
@@ -230,7 +263,6 @@ class TodoManager {
 const todoManager = new TodoManager();
 
 function addTodo() {
-  // bekerja cuma ada error iterable di class kah
   const input = document.getElementById("todo-input");
   const dateInput = document.getElementById("todo-date");
   const priority = document.getElementById("todo-priority");
@@ -244,3 +276,49 @@ function deleteAll() {
   todoManager.deleteAllTodos();
   closeModalDelete();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const registrationPopup = document.getElementById("reg-container");
+  const saveProfileBtn = document.getElementById("save-profile-btn");
+  const nameInput = document.getElementById("name-input");
+  const roleInput = document.getElementById("role-input");
+  const userName = document.getElementById("user-name");
+  const userRole = document.getElementById("user-role");
+
+  function checkProfile() {
+    const userProfile = localStorage.getItem("userProfile");
+
+    if (userProfile) {
+      const profile = JSON.parse(userProfile);
+
+      userName.textContent = profile.name;
+      userRole.textContent = profile.role;
+    } else {
+      registrationPopup.style.display = "block";
+    }
+  }
+
+  saveProfileBtn.addEventListener("click", () => {
+    const name = nameInput.value;
+    const role = roleInput.value;
+
+    const userProfile = {
+      name,
+      role,
+    };
+
+    localStorage.setItem("userProfile", JSON.stringify(userProfile));
+
+    registrationPopup.style.display = "none";
+
+    checkProfile();
+  });
+
+  checkProfile();
+});
+
+const checkboxFilter = document.getElementById("checkbox-filter");
+
+checkboxFilter.addEventListener("change", () => {
+  todoManager.filterCompleted();
+});
