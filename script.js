@@ -1,3 +1,4 @@
+// modal form-todo
 const modalContainer = document.getElementById("modal-container");
 const openModalBtn = document.getElementById("open-btn");
 const closeBtn = document.getElementById("close-btn");
@@ -15,11 +16,12 @@ openModalBtn.addEventListener("click", openModal);
 closeBtn.addEventListener("click", closeModal);
 
 window.addEventListener("click", (event) => {
+  // logci ini digunakan untuk menutup modal, jika user klik diluar modal.
   if (event.target === modalContainer) {
     closeModal();
   }
 });
-
+// modal hapus seluruh todos
 const modalContainerDelete = document.getElementById("modal-container-delete");
 const openModalBtnDelete = document.getElementById("open-btn-delete");
 const closeBtnDelete = document.getElementById("close-btn-delete");
@@ -42,6 +44,7 @@ window.addEventListener("click", (event) => {
   }
 });
 
+// modal profile
 const modalContainerProfile = document.getElementById(
   "modal-container-profile"
 );
@@ -74,7 +77,7 @@ class TodoManager {
   }
 
   loadTodos() {
-    return JSON.parse(localStorage.getItem("todos")) || [];
+    return JSON.parse(localStorage.getItem("todos")) || []; // data diambil dari localStorage, kemudian dimasukan ke this.todos
   }
 
   sortTodos() {
@@ -82,27 +85,27 @@ class TodoManager {
     const completedTodos = this.todos.filter((todo) => todo.completed);
 
     activeTodos.sort((a, b) => a.order - b.order);
-    this.todos = [...activeTodos, ...completedTodos]; // Inilah dimana yang dicentang kebawah
+    this.todos = [...activeTodos, ...completedTodos]; // Inilah dimana, yang tercentang posisinya kebawah
 
     this.todos.forEach((todo, index) => {
-      // Isi-in ordernya dengan index
+      // Isi value order-nya dengan index
       todo.order = index;
     });
   }
 
   saveTodos() {
-    localStorage.setItem("todos", JSON.stringify(this.todos));
+    localStorage.setItem("todos", JSON.stringify(this.todos)); // simpan todos di localStorage
   }
 
   groupTodosByDate() {
     const grouped = {};
     this.todos.forEach((todo) => {
       if (!grouped[todo.date]) {
-        grouped[todo.date] = []; // bikin dulu array kalau gak ada diatas
+        grouped[todo.date] = []; // bikin dulu value baru, kalau belum ada value nya
       }
       grouped[todo.date].push(todo); // lanjut masukan todo sesuai grup tanggal
-      // hasilnya: "2025-01-16" : [ {...todos} ]
-      // Kaya pattern map gitu
+      // hasilnya: "2025-01-16" : [ {...todos} ], "2025-01-17", : [ {...todos} ]
+      // Kaya map?
     });
 
     return grouped;
@@ -126,7 +129,8 @@ class TodoManager {
       month: "long",
       day: "numeric",
     };
-    return date.toLocaleDateString("id-ID", options);
+
+    return date.toLocaleDateString("id-ID", options); // proses untuk mengubah format tanggal menjadi: "Day, DD Month YYYY"
   }
 
   toggleTodo(id) {
@@ -134,14 +138,14 @@ class TodoManager {
 
     // ketika todoIndex ada, kalau gak ada -1
     if (todoIndex !== -1) {
-      this.todos[todoIndex].completed = !this.todos[todoIndex].completed; // toggle disini, kalau false jadi true dan sebaliknya
+      this.todos[todoIndex].completed = !this.todos[todoIndex].completed; // kalau disini false jadi true, dan sebaliknya. Ini adalah toggle untuk mencentang todo
       this.sortTodos();
       this.saveTodos();
       this.renderTodos();
     }
   }
 
-  createTodoElement(todo, status) {
+  createTodoElement(todo) {
     const sectionItem = document.createElement("section");
     sectionItem.classList.add("todo-list");
 
@@ -149,7 +153,7 @@ class TodoManager {
     checkbox.classList.add("checker");
     checkbox.type = "checkbox";
     checkbox.checked = todo.completed;
-    checkbox.addEventListener("change", () => this.toggleTodo(todo.id)); // toggle selesai atau belum
+    checkbox.addEventListener("change", () => this.toggleTodo(todo.id)); // digunakan untuk mencentang todo
 
     const textContainerItem = document.createElement("div");
     textContainerItem.classList.add("text-container");
@@ -160,9 +164,9 @@ class TodoManager {
 
     const contentText = document.createElement("p");
     contentText.classList.add("text");
-    contentText.textContent = todo.text;
+    contentText.textContent = todo.text; // disini text todo di taruh
     if (todo.completed) {
-      contentText.classList.add("crossed-out");
+      contentText.classList.add("crossed-out"); // jika text todo tercentang/completed maka dicoret
     }
 
     sectionItem.appendChild(checkbox);
@@ -175,13 +179,13 @@ class TodoManager {
     return sectionItem;
 
     // div-group-date. didalamnya
-    // h2-date
-    // hr
-    // section-todo-list, didalamnya:
-    // input checkbox-chechker
-    // div-text-container, didalamnya:
-    // span-medium (Prioritas)
-    // p-text (content)
+    //   h2-date
+    //   hr
+    //   section-todo-list, didalamnya:
+    //     input checkbox-chechker
+    //     div-text-container, didalamnya:
+    //       span-medium (Prioritas)
+    //       p-text (content)
   }
 
   renderTodos() {
@@ -190,44 +194,45 @@ class TodoManager {
 
     const groupedTodos = this.groupTodosByDate();
     const sortedDates = Object.keys(groupedTodos).sort(
-      (a, b) => new Date(b) - new Date(a) // terbaru ke terlama tanggalnya
+      // proses untuk mengambil setiap tanggal, yaitu hanya tanggal nya saja, dikumpulkan menjadi array
+      (a, b) => new Date(b) - new Date(a) // terbaru ke terlama tanggal=nya
     );
 
     sortedDates.forEach((date) => {
-      const containerTodoItem = document.createElement("div");
+      const containerTodoItem = document.createElement("div"); // buat setiap container sesuai tanggal
       containerTodoItem.classList.add("group-date");
 
       const dateTitle = document.createElement("h2");
       dateTitle.classList.add("date");
-      dateTitle.textContent = this.formateDateDisplay(date);
-      containerTodoItem.appendChild(dateTitle);
+      dateTitle.textContent = this.formateDateDisplay(date); // hasil format menjadi: Day, DD Month Year
+      containerTodoItem.appendChild(dateTitle); // masukan tanggal nya dari formateDateDisplate(Date)
 
       const line = document.createElement("hr");
-      containerTodoItem.appendChild(line);
+      containerTodoItem.appendChild(line); // ini hanya sebuah batas yang ditampilkan antara tanggal dan text todo
 
-      const todosForDate = groupedTodos[date];
+      const todosForDate = groupedTodos[date]; // mengambil value yang disimpan dengan key-nya yaitu date, contoh value dari groupedTodos: "2025-01-17", : [ {...todos} ]
 
       const filteredTodos = todosForDate.filter((todo) => {
         if (this.showOnlyCompleted) {
-          return todo.completed;
+          return todo.completed; // tampilkan hanya yang selesai
         }
 
-        return true; // show all todos
+        return true; // tampilkan semua todos
       });
 
       filteredTodos.forEach((todo) => {
         const todoItem = this.createTodoElement(todo);
-        containerTodoItem.appendChild(todoItem);
+        containerTodoItem.appendChild(todoItem); // tambah seluruh todo ke dalam containernya dengan melakukan pengulangan
       });
 
       if (filteredTodos.length > 0) {
-        container.appendChild(containerTodoItem);
+        container.appendChild(containerTodoItem); // jika todo ada, langusng ditampilkan
       }
     });
   }
 
   filterCompleted() {
-    this.showOnlyCompleted = !this.showOnlyCompleted;
+    this.showOnlyCompleted = !this.showOnlyCompleted; // toggle untuk nampilin yang tercentang saja atau semua
     this.renderTodos();
   }
 
@@ -236,7 +241,9 @@ class TodoManager {
   }
 
   addTodo(text, date, priority) {
-    if (!text) return;
+    // menambah todo baru, data diambil dari form modal todo.
+    if (!text) return; // jika text todo tidak ada, maka tidak dilanjutkan pembuatan todo
+
     const todo = {
       id: Date.now(),
       text,
@@ -244,7 +251,7 @@ class TodoManager {
       completed: false,
       priority: priority || "low",
       order: this.todos.length,
-    };
+    }; // ini adalah bentuk data item di dalam array this.todos
 
     this.todos.push(todo);
     this.sortTodos();
@@ -253,7 +260,7 @@ class TodoManager {
   }
 
   deleteAllTodos() {
-    this.todos = [];
+    this.todos = []; // hapus semua todos, dengan mengosongkan this.todos[]
     this.sortTodos();
     this.saveTodos();
     this.renderTodos();
@@ -266,14 +273,16 @@ function addTodo() {
   const input = document.getElementById("todo-input");
   const dateInput = document.getElementById("todo-date");
   const priority = document.getElementById("todo-priority");
-  todoManager.addTodo(input.value, dateInput.value, priority.value);
+
+  todoManager.addTodo(input.value, dateInput.value, priority.value); // data yang dimasukan hanya text, tanggal, dan prioritas
+
   input.value = "";
   dateInput.value = "";
   closeModal();
 }
 
 function deleteAll() {
-  todoManager.deleteAllTodos();
+  todoManager.deleteAllTodos(); // hapus semua todos
   closeModalDelete();
 }
 
@@ -289,16 +298,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const userProfile = localStorage.getItem("userProfile");
 
     if (userProfile) {
-      const profile = JSON.parse(userProfile);
+      const profile = JSON.parse(userProfile); // mengambil data userProfile dari localStorage, hasil pendaftaran diawal
 
+      // kemudian data dimasukan ke dalam modal profile
       userName.textContent = profile.name;
       userRole.textContent = profile.role;
     } else {
-      registrationPopup.style.display = "block";
+      registrationPopup.style.display = "block"; // jika data userProfile (nama, peran) belum ditambahkan, modal registration ditampilkan
     }
   }
 
+  // lanjut jika user belum mendaftar, saveProfileBtn adalah button submit dari registrationPopup yang ditampilkan diatas
   saveProfileBtn.addEventListener("click", () => {
+    // ambil data dari modal registrasi
     const name = nameInput.value;
     const role = roleInput.value;
 
@@ -307,11 +319,11 @@ document.addEventListener("DOMContentLoaded", () => {
       role,
     };
 
-    localStorage.setItem("userProfile", JSON.stringify(userProfile));
+    localStorage.setItem("userProfile", JSON.stringify(userProfile)); // masukan data ke localStorage
 
-    registrationPopup.style.display = "none";
+    registrationPopup.style.display = "none"; // tutup modal registrasi
 
-    checkProfile();
+    checkProfile(); // cek lagi dari atas, jika data sudah dimasukan
   });
 
   checkProfile();
@@ -320,5 +332,5 @@ document.addEventListener("DOMContentLoaded", () => {
 const checkboxFilter = document.getElementById("checkbox-filter");
 
 checkboxFilter.addEventListener("change", () => {
-  todoManager.filterCompleted();
+  todoManager.filterCompleted(); // toggle untuk menampilkan todos yang tercentang saja atau semua todos, dengan checkbox
 });
